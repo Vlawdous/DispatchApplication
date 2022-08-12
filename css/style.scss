@@ -1,0 +1,873 @@
+@import "mixins_and_variables.scss";
+
+// Fonts
+@font-face {
+    font-family: 'Montserrat';
+    src: url('./fonts/main_font.ttf') format('truetype');
+    src: url('./fonts/main_font.woff') format('woff');
+    src: url('./fonts/main_font.otf') format('opentype');
+}
+
+//ОБЩИЕ СТИЛИ
+body {
+    @include setFont();
+
+    min-height: 100vh;
+
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    width: fit-content;
+
+    text-decoration: none;
+
+    color: black;
+
+    transition: 0.5s;
+
+    &:hover {
+        color: white;
+
+        transition: 0.2s;
+    }
+
+    &:active {
+        color: darken(white, 25%);
+
+        transition: 0.2s;
+    }
+
+    &:visited {
+        color: black;
+
+        transition: 0.5s;
+
+        &:hover {
+            color: white;
+
+            transition: 0.2s;
+        }
+
+        &:active {
+            color: darken(white, 25%);
+
+            transition: 0.2s;
+        }
+    }
+}
+
+header {
+    @include getGrid(50px 1fr, 100%, "logo navigation", (items: center));
+
+    grid-area: header;
+
+    font-size: 20px;
+
+    background: map-get($map: $mainColors, $key: header);
+
+    &>div {
+        grid-area: logo;
+
+        padding-left: 10px;
+    }
+
+    &>nav {
+        @include getFlex(row, $gap: 40px);
+        width: fit-content;
+
+        grid-area: navigation;
+
+        justify-self: end;
+
+        padding-right: 10px;
+    }
+}
+
+@media (max-width: 1300px) {
+    header {
+        font-size: 16px;
+    }
+}
+
+main {
+    grid-area: main;
+
+    background: map-get($map: $mainColors, $key: main);
+}
+
+footer {
+    @include getGrid(repeat(3, 25%), 70%, $align: (content: center), $justify: (content: space-around, items: center));
+
+    grid-area: footer;
+
+    color: map-get($map: $mainColors, $key: main);
+
+    text-align: center;
+
+    background: map-get($map: $mainColors, $key: footer);
+
+    & ul {
+        padding-left: 0;
+    }
+
+    & p {
+        font-size: 30px;
+    }
+
+    &>.time {
+        position: relative;
+        overflow: visible;
+
+        &>img {
+            display: block;
+            position: absolute;
+
+            @include size(125px, 125px);
+
+            top: 15%;
+            right: 110%;
+        }
+    }
+}
+
+@media (max-width: 1600px) {
+    .time>img {
+        display: none !important;
+    }
+}
+
+input {
+    @include setFont();
+}
+
+*::placeholder {
+    @include setFont();
+}
+
+li {
+    list-style-type: none;
+}
+
+.logo_box {
+    @include isAvatar(42px, 42px);
+}
+
+.window {
+    @include getFlex(column, $align: (items: center), $justify: (content: space-evenly));
+
+    border-radius: 5px;
+
+    background: map-get($map: $mainColors, $key: header);
+}
+
+@media (max-height: 1000px) {
+    .window {
+        border-radius: 0 !important;
+    }
+}
+
+.modal_background {
+    @include getFlex(column, $align: (items:center), $justify: (content: center));
+    @include size(100vw, 100%);
+
+    background-color: rgba(0, 0, 0, 0.5);
+
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+
+    position: fixed;
+
+    &>.modal_window {
+        @include size(300px, 300px);
+
+        z-index: 2;
+
+        border-radius: 5px;
+
+        background: map-get($map: $mainColors, $key: main);
+
+        & form {
+            @include getGrid(1fr, 60% 40%, $align: (items: center), $justify: (items: center));
+            @include size(100%, 100%);
+            text-align: center;
+
+            &>.modal_input {
+                &>input[type="text"] {
+                    @include isInput(90%, 20px, darken(map-get($map: $mainColors, $key: main), 10%), lighten(black, 20%));
+
+                    align-self: start;
+
+                    margin-bottom: 10px;
+                }
+
+                &>input[type="submit"] {
+                    @include isSubmit(200px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+                }
+            }
+        }
+    }
+}
+
+.transparent {
+    opacity: 0;
+    pointer-events: none;
+    transition: 1s;
+}
+
+.visible {
+    opacity: 1;
+    pointer-events: all;
+    transition: 1s;
+}
+
+.error_message {
+    color: rgb(207, 0, 0);
+}
+
+.window_main {
+    @include getGrid(minmax(250px, 100%), $headerSize 1fr $footerSize,
+        "header"
+        "main"
+        "footer");
+
+    &>main {
+        @include getFlex($align: (items: center), $justify: (content: center));
+
+        grid-area: main;
+
+        background: map-get($map: $mainColors, $key: main);
+
+        &>.window {
+            @include size(500px, 700px);
+
+            &>.logo_box {
+                @include isAvatar(200px, 200px);
+            }
+        }
+    }
+}
+
+.scrolling_window {
+    @include getFlex(column, $align: (items: center));
+    @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+    @include size(90%, 90%);
+
+    overflow: auto;
+}
+
+
+
+
+
+// УНИКАЛЬНЫЕ СТИЛИ ДЛЯ ОТДЕЛЬНЫХ СТРАНИЦ
+.main_page {
+    @include getGrid(1fr, $headerSize 1fr $footerSize,
+        "header"
+        "main"
+        "footer");
+
+    &>main {
+        @include getFlex(column, $align: (items: center));
+
+        & h1 {
+            font-size: 50px;
+        }
+
+        &>h1 {
+            text-align: center;
+
+            padding-top: 50px;
+
+            height: 100px;
+        }
+
+        &>.intro {
+            width: 100%;
+            height: 600px;
+
+            background-size: cover;
+            background-position: center center;
+            background-image: url("/images/intro.jpg");
+            background-repeat: no-repeat;
+
+            &>.blur {
+                @include getFlex(column, $align: (items: center), $justify: (content: center));
+
+                width: 100%;
+                height: 100%;
+
+                backdrop-filter: blur(2px);
+            }
+
+            & h2 {
+                color: black;
+                font-size: 80px;
+
+                background: rgba(255, 255, 255, 0.5);
+            }
+        }
+
+        &>.about {
+            @include getFlex(column, $align: (items: center));
+
+            width: 90%;
+            padding: 50px 0;
+
+            & h2 {
+                font-size: 40px;
+            }
+
+            & ul {
+                @include getFlex(column, $align: (items: start));
+
+                &>li {
+                    padding: 10px 0;
+                }
+
+                &>li::first-letter {
+                    font-size: 40px;
+
+                    padding-right: 10px;
+
+                    color: red;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 1600px) and (min-width: 1000px),
+(max-height: 1600px) and (min-height: 1000px) {
+    .intro h2 {
+        font-size: 60px !important;
+    }
+}
+
+@media (max-width: 1000px),
+(max-height: 1000px) {
+    main h1 {
+        font-size: 28px !important;
+    }
+
+    .intro h2 {
+        font-size: 32px !important;
+    }
+}
+
+
+
+
+.dispatch_application {
+    @include getGrid(200px 1fr, $headerSize 1fr $footerSize,
+        "header header"
+        "nav main"
+        "footer footer");
+
+    main {
+        @include getFlex(row, $align: (items: center), $justify: (content: center));
+
+        min-height: 800px;
+        min-width: 800px;
+
+        form {
+            @include getFlex(column, $align: (items: center), $justify: (content: center));
+            @include size(100%, 100%);
+            @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+
+            overflow: auto;
+
+            gap: 10px;
+
+            input[type="text"],
+            input[type="number"],
+            input[type="datetime-local"] {
+                @include isInput(300px, 20px, darken(map-get($map: $mainColors, $key: main), 10%), lighten(black, 20%));
+            }
+
+            textarea {
+                @include isInput(90%, 200px, darken(map-get($map: $mainColors, $key: main), 10%), lighten(black, 20%));
+                @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+
+                resize: none;
+                overflow: auto;
+            }
+
+            select {
+                @include isInput(300px, fit-content, darken(map-get($map: $mainColors, $key: main), 10%), lighten(black, 20%));
+            }
+
+            input[type="submit"] {
+                @include isSubmit(200px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+                margin-bottom: 10px;
+            }
+        }
+
+        .table {
+            @include getFlex(column, $align: (items: center), $justify: (content: center));
+            @include size(80%, 528px);
+
+            gap: 20px;
+
+            .overflow_table {
+                @include size(90%, 600px);
+                @include styleScroll(map-get($map: $mainColors, $key: nav), darken(map-get($map: $mainColors, $key: nav), 15%));
+
+                overflow: auto;
+
+                background: darken(map-get($map: $mainColors, $key: nav), 25%);
+                border-radius: 10px;
+
+                table {
+                    @include size(100%);
+
+                    border: 1px solid black;
+                    border-collapse: collapse;
+
+                    text-align: center;
+
+                    padding: 10px;
+
+                    form {
+
+                        @include size(110px, 50px);
+
+                        input[type="submit"] {
+                            @include isSubmit(100px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+                        }
+                    }
+
+                    td,
+                    th {
+                        border: 1px solid black;
+                        /* Параметры рамки */
+
+                        height: 100px;
+
+                        font-size: 24px;
+
+                    }
+
+                    th {
+                        background: map-get($map: $mainColors, $key: header);
+                    }
+
+                    td {
+                        background: map-get($map: $mainColors, $key: nav);
+                    }
+                }
+            }
+
+            .pages {
+                @include getFlex(row, $align: (items: center), $justify: (content: center));
+
+                gap: 10px;
+
+                width: 200px;
+
+                font-size: 20px;
+
+                .previous,
+                .next {
+                    @include getFlex(row, $align: (items: center), $justify: (content: center));
+                    @include isInput(50px, 20px, map-get($map: $mainColors, $key: nav), lighten(black, 20%));
+
+                }
+            }
+        }
+        .filter {
+            @include size(20%, fit-content);
+
+            background-color: map-get($map: $mainColors, $key: nav);
+
+            text-align: center;
+
+            margin-right: 10px;
+
+            form {
+                @include getFlex(column, $align: (items: center), $justify: (content: center));
+
+                gap: 10px;
+
+                margin-top: 100px;
+
+                height: fit-content;
+
+                input[type="text"] {
+                    @include isInput(90%, 20px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+                }
+
+                input[type="submit"] {
+                    @include isSubmit(150px, 30px, lighten(map-get($map: $mainColors, $key: footer), 5%), map-get($map: $mainColors, $key: main), black);
+                }
+            }
+        }
+        .message_box {
+            @include getFlex(column, $align: (items: center), $justify: (content: space-between));
+            @include size(80%, 80%);
+            @include styleScroll(map-get($map: $mainColors, $key: nav), darken(map-get($map: $mainColors, $key: nav), 15%));
+
+            overflow: auto;
+
+            background-color: map-get($map: $mainColors, $key: nav);
+
+            min-height: 600px;
+
+        .buttons {
+            @include getFlex(column, $align: (items: center), $justify: (content: center));
+            @include size(200px, 200px);
+
+            form {
+                @include size(200px, 50px);
+            }
+        }
+        }
+    }
+
+    &>nav {
+        @include getFlex(column);
+
+        grid-area: nav;
+
+        background: map-get($map: $mainColors, $key: nav);
+    }
+
+    .list_menu {
+        @include isMenu();
+
+        .menu_item {
+            @include doubleShadow();
+
+            position: relative;
+
+            font-size: 14px;
+
+            min-height: 50px;
+
+            text-align: center;
+
+            user-select: none;
+        }
+
+        .icon_arrow {
+            @include isAnimatedArrow(darken(map-get($map: $mainColors, $key: nav), 40%), 0, 10%);
+        }
+    }
+
+    .sublist_menu {
+        @include isMenu();
+        @include isHiddenSublist();
+        background-color: darken(map-get($map: $mainColors, $key: main), 25%);
+
+        font-size: 16px;
+    }
+
+    .submenu_item {
+        padding: 10px 0;
+        @include size(100%, fit-content);
+    }
+
+    .click_zone {
+        @include animatedClick(map-get($map: $mainColors, $key: nav), 10%, 20%);
+
+        display: inline-block;
+        width: 100%;
+
+        height: 50px;
+    }
+}
+
+
+
+
+.auth_form {
+    @include getFlex(column, $align: (items: center), $justify: (content: space-between));
+    @include size(90%, 300px);
+
+    &>.auth_input {
+        @include getFlex(column, $align: (items: center), $justify: (content: space-evenly));
+
+        @include size(100%, 150px);
+
+        input {
+            @include isInput(100%, 20px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+        }
+
+        input[type="text"]::after,
+        input[type="password"]::after {
+            content: '10';
+        }
+
+        input[type="submit"] {
+            @include isSubmit(200px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+
+            margin-bottom: 10px;
+        }
+
+        a {
+            margin-bottom: 10px;
+        }
+    }
+}
+
+
+
+
+.profile {
+    form {
+        @include getFlex(column, $align: (items: center));
+
+        input[type="text"],
+        input[type="password"] {
+            @include isInput(200px, 20px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+        }
+
+        textarea {
+            @include isInput(300px, 500px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+            @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+
+            resize: none;
+            overflow: auto;
+        }
+
+        input[type="submit"] {
+            @include isSubmit(150px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+        }
+    }
+
+    a {
+        margin-top: 50px;
+    }
+}
+
+
+
+
+.emergency {
+    form {
+        @include getFlex(column, $align: (items: center));
+
+        select {
+            @include isInput(300px, 30px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+        }
+
+        textarea {
+            @include isInput(90%, 800px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+            @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+
+            resize: none;
+            overflow: auto;
+        }
+
+        input[type="submit"] {
+            @include isSubmit(150px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+        }
+    }
+
+    .call {
+        @include getFlex(column);
+        @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+        @include size(90%, fit-content);
+        min-height: 200px;
+
+        border: 3px solid darken(map-get($map: $mainColors, $key: header), 10%);
+        border-radius: 5px;
+
+        padding: 5px;
+        margin: 2px;
+
+        overflow: auto;
+
+        background-color: darken(map-get($map: $mainColors, $key: header), 10%);
+
+        hr {
+            color: darken(map-get($map: $mainColors, $key: header), 15%);
+            background-color: darken(map-get($map: $mainColors, $key: header), 15%);
+            border: 1px solid darken(map-get($map: $mainColors, $key: header), 15%);
+
+            width: 60px;
+        }
+    }
+}
+
+
+
+
+.pay {
+    text-align: center;
+
+    form {
+        @include getFlex(column, $align: (items: center));
+
+        input[type="text"] {
+            @include isInput(300px, 20px, darken(map-get($map: $mainColors, $key: header), 10%), lighten(black, 20%));
+            margin: 2px;
+        }
+
+        input[type="submit"] {
+            @include isSubmit(150px, 30px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+        }
+    }
+
+    button {
+        @include isSubmit(200px, 50px, lighten(map-get($map: $mainColors, $key: footer), 15%), map-get($map: $mainColors, $key: main), black);
+    }
+}
+
+
+
+
+.ads {
+    overflow: auto;
+
+    .ad {
+        @include getFlex(column);
+        @include styleScroll(darken(map-get($map: $mainColors, $key: header), 15%), white);
+        @include size(90%, 500px);
+        min-height: 500px;
+
+        border: 3px solid darken(map-get($map: $mainColors, $key: header), 10%);
+        border-radius: 5px;
+
+        padding: 5px;
+        margin: 2px;
+
+        overflow: auto;
+
+        background-color: darken(map-get($map: $mainColors, $key: header), 10%);
+
+        input[type="submit"] {
+            @include isSubmit(150px, 30px, darken(map-get($map: $mainColors, $key: header), 35%), map-get($map: $mainColors, $key: main), black);
+        }
+    }
+}
+
+
+
+
+// РАЗРЕШЕНИЕ ДЛЯ МОБИЛЬНЫХ УСТРОЙСТВ
+@media (max-width: 500px),
+(max-height: 500px) {
+    .main_page {
+        @include getGrid(1fr, min-content 1fr min-content,
+            "header"
+            "main"
+            "footer");
+
+        h1 {
+            font-size: 22px !important;
+        }
+
+        h2 {
+            font-size: 22px !important
+        }
+
+        .blur>h2 {
+            text-align: center;
+        }
+    }
+
+
+
+
+    .dispatch_application {
+        @include getGrid(1fr, 50px max-content 1fr max-content,
+            "header"
+            "nav"
+            "main"
+            "footer");
+
+        nav {
+            overflow: auto;
+        }
+
+        main {
+            @include getFlex(column);
+
+            gap: 20px;
+
+            min-height: auto !important;
+            min-width: auto !important;
+
+            .table {
+                width: 100% !important;
+
+                .overflow_table {
+                    width: 100vw !important;
+                }
+            }
+
+            .filter {
+                width: 100% !important;
+                margin-bottom: 20px;
+
+                form {
+                    padding-top: 20px !important;
+                    margin-bottom: 20px;
+                }
+            }
+            .message_box {
+                width: 100% !important;
+            }
+        }
+
+        .menu_item {
+            font-size: 20px !important
+        }
+    }
+
+
+
+
+    .window_main {
+        @include getGrid(1fr, 50px 1fr min-content,
+            "header"
+            "main"
+            "footer");
+    }
+
+
+
+
+    .window {
+        width: 100% !important;
+        height: 500px !important;
+    }
+
+
+
+
+    header {
+        @include getFlex(column, $gap: 30px);
+
+        font-size: 30px !important;
+
+        padding-bottom: 20px !important;
+
+        &>div {
+            padding: 10px 0 0 0 !important;
+        }
+
+        &>nav {
+            @include getFlex(column, $align: (items: center));
+
+            padding: 0 !important;
+
+            text-align: center;
+        }
+    }
+
+    footer {
+        @include getFlex(column);
+
+        gap: 20px;
+    }
+
+    .logo_box {
+        @include isAvatar(120px, 120px);
+    }
+}

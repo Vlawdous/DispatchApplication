@@ -1,0 +1,164 @@
+// Variables
+$mainColors: (
+    header: rgb(54, 142, 209),
+    nav: rgb(226, 226, 226),
+    main: rgb(255, 255, 255),
+    footer: rgb(16, 42, 63)
+);
+$footerSize: 300px;
+$headerSize: 50px;
+
+// Mixins
+@mixin getGrid($columns: null, $rows: null, $areas: null, $align: null, $justify: null, $gap: null) {
+    display: grid;
+    grid-template-columns: $columns;
+    grid-template-rows: $rows;
+    grid-template-areas: $areas;
+    @if ($align) {
+        @each $property, $value in $align {
+            align-#{$property}: $value;
+        }
+    }
+    @if ($justify) {
+        @each $property, $value in $justify {
+            justify-#{$property}: $value;
+        }
+    }
+    grid-gap: $gap;
+}
+@mixin getFlex($direction: null, $align: null, $justify: null, $gap: null) {
+    display: flex;
+    flex-direction: $direction;
+    @if ($align) {
+        @each $property, $value in $align {
+            align-#{$property}: $value;
+        }
+    }
+    @if ($justify) {
+        @each $property, $value in $justify {
+            justify-#{$property}: $value;
+        }
+    }
+    gap: $gap;
+}
+
+@mixin size($width: null, $height: null) {
+    width: $width;
+    height: $height;
+}
+@mixin selfGrid($align, $justify) {
+    align-self: $align;
+    justify-self: $justify;
+}
+@mixin setFont($family: null, $weight: 600) {
+    @if ($family) {
+        font-family: $family;
+    }
+    @else {
+        font-family: Montserrat, Arial, Helvetica, sans-serif, sans-serif;
+    }
+    font-size: 16;
+    font-weight: $weight;
+}
+@mixin styleScroll($colorScrollBar, $colorScroll) {
+    &::-webkit-scrollbar {
+        width: 8px;
+        background-color: $colorScrollBar;
+        border-radius: 5px;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: $colorScroll;
+        border-radius: 5px;
+    }
+}
+@mixin doubleShadow {
+    box-shadow: (0 1px 0 lighten(map-get($map: $mainColors, $key: nav), 10%) inset, 0 -1px 0 darken(map-get($map: $mainColors, $key: nav), 10%) inset);
+}
+@mixin animatedClick($color, $hoverPercent, $activePercent) {
+    transition: 0.2s;
+
+    &:hover {
+        background-color: darken($color, $hoverPercent);
+        transition: 0.2s;
+    }
+    &:active {
+        background-color: darken($color, $activePercent);
+        transition: 0.2s;
+    }
+}
+
+@mixin isAvatar($width, $height) {
+    @include getGrid($align: (content: center, self: center), $justify: (content: center, self: start));
+    @include size($width, $height);
+
+    background: map-get($map: $mainColors, $key: main);
+    border-radius: 50%;
+
+    & img {
+        width: $width / 1.1;
+        height: $height / 1.1;
+    }
+}
+@mixin isInput($width, $height, $backgroudColor, $textColor) {
+    width: $width;
+    height: $height;
+
+    border: 0 !important;
+    border-radius: 5px;
+
+    padding: 5px;
+
+    background: $backgroudColor;
+
+    &::placeholder {
+        color: $textColor;
+    }
+}
+@mixin isSubmit ($width, $height, $backgroudColor, $backgroundColorWhenHover, $textColor: black) {
+    @include animatedClick($backgroundColorWhenHover, 0%, 10%);
+    @include size($width, $height);
+
+    border: 0 !important;
+    border-radius: 5px;
+
+    padding: 5px;
+
+    color: $textColor;
+
+    margin-top: 10px;
+    background: lighten($backgroudColor, 15%);
+}
+@mixin isMenu {
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 0;
+}
+@mixin isHiddenSublist($startPadding: 10px) {
+    &.menu_close {
+        max-height: 0;
+        overflow: hidden;
+    }
+    &.menu_open {
+        max-height: none;
+        padding-top: $startPadding;
+    }
+}
+@mixin isAnimatedArrow($colorArrow, $topIdent: null, $rightIdent: null, $animationTime: .6s) {
+    position: absolute;
+    
+    color: $colorArrow;
+
+    top: $topIdent;
+    right: $rightIdent;
+
+    &.icon_open {
+        transform: (rotate(-180deg));
+        transition: (transform $animationTime);
+    }
+    &.icon_close {
+        transform: (rotate(0deg));
+        transition: (transform $animationTime);
+    }
+}
